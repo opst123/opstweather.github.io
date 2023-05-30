@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>台中氣象</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>台中天氣</h1>
+
+  <div id="weather" style="margin-top: 20px;"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      type: 'GET',
+      url: 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073?Authorization=CWB-19B07FE3-446E-4B33-8D6C-AB17B097292E&limit=3&offset=0&locationName=%E5%90%8E%E9%87%8C%E5%8D%80&elementName=T,RH',
+      dataType: 'json',
+      success: function(response) {
+
+        var temperature = response.records.locations[0].location[0].weatherElement[1].value;
+        var humidity = response.records.locations[0].location[0].weatherElement[1].description;
+
+        var html = '<div class="card">';
+        html += '<div class="card-body">';
+        html += '<h5 class="card-title">台中天氣</h5>';
+        html += '<p class="card-text">温度：' + temperature + '°C</p>';
+        html += '<p class="card-text">濕度：' + humidity + '%</p>';
+        html += '</div>';
+        html += '</div>';
+
+        $('#weather').html(html);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('#weather').html('<div class="alert alert-danger">获取气象数据失败：' + textStatus + '</div>');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
