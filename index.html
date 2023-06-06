@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>台中天氣</h1>
+  <h1>台中西屯天氣</h1>
 
   <div id="weather" style="margin-top: 20px;"></div>
 </div>
@@ -17,20 +17,33 @@
 
 <script>
   $(document).ready(function() {
+      var temp=[];
+
     $.ajax({
       type: 'GET',
-      url: 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073?Authorization=CWB-19B07FE3-446E-4B33-8D6C-AB17B097292E&limit=3&offset=0&locationName=%E5%90%8E%E9%87%8C%E5%8D%80&elementName=T,RH',
+      url: 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073?Authorization=CWB-19B07FE3-446E-4B33-8D6C-AB17B097292E&limit=6&offset=0&locationName=%E8%A5%BF%E5%B1%AF%E5%8D%80&elementName=T,RH',
       dataType: 'json',
       success: function(response) {
+          console.log(JSON.stringify(response));
 
-        var temperature = response.records.locations[0].location[0].weatherElement[1].value;
-        var humidity = response.records.locations[0].location[0].weatherElement[1].description;
+          temp = response;
+          console.log(response.records.locations[0].location[0].weatherElement[0])
+
+
 
         var html = '<div class="card">';
         html += '<div class="card-body">';
         html += '<h5 class="card-title">台中天氣</h5>';
-        html += '<p class="card-text">温度：' + temperature + '°C</p>';
-        html += '<p class="card-text">濕度：' + humidity + '%</p>';
+        for(var i=0;i<32;i++) {
+
+            var datetime = response.records.locations[0].location[0].weatherElement[0].time[0].dataTime;
+            var temperature = response.records.locations[0].location[0].weatherElement[0].time[0].elementValue[0].value;
+            var humidity = response.records.locations[0].location[0].weatherElement[1].time[0].elementValue[0].value;
+
+            html += '<p class="card-text">TIME：' + datetime + '°C</p>';
+            html += '<p class="card-text">温度：' + temperature + '°C</p>';
+            html += '<p class="card-text">濕度：' + humidity + '%</p>';
+        }
         html += '</div>';
         html += '</div>';
 
